@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  kaufland-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - C:\Volumes\GCP_CREDS:/app/secrets
+    environment:
+      - SA_KEY_PATH=secrets/sa-credentials.json
+      - BUCKET_NAME=${BUCKET_NAME}

@@ -7,6 +7,7 @@ from config import logger
 def download_images(image_links: list[str], dates: str):
     logger.info("Check is the folder existing")
     os.makedirs("output", exist_ok=True)
+    os.makedirs(f"output/{dates}", exist_ok=True)
 
     logger.info("Start get the images")
     for i, link in enumerate(image_links):
