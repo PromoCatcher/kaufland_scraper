@@ -37,9 +37,12 @@ def scrape_url_links() -> tuple[list[str], str]:
         dates_el = dates_els[3]
         dates = dates_el.inner_text()
 
-        
-        tiles = page.query_selector_all("div.o-slider-to-grid__tile")
-        fourth_tile = tiles[3]
+        data_container = page.query_selector('[data-container-id="1"]')
+
+        logger.info(data_container)
+        tiles = data_container.query_selector_all("div.o-slider-to-grid__tile")
+        logger.info(len(tiles))
+        fourth_tile = tiles[0]
         fourth_tile.click()
 
         # Accept cookie popup again if it appears
