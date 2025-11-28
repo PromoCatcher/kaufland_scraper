@@ -2,12 +2,14 @@ import re
 
 from playwright.sync_api import sync_playwright
 
-from config import logger
+from logger import logger
 
 
 def scrape_url_links() -> tuple[list[str], str]:
+    img_links: list[str] = []
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         page = browser.new_page()
 
         logger.info("Browser initiated.")
@@ -24,7 +26,6 @@ def scrape_url_links() -> tuple[list[str], str]:
             raise Exception("Error accepting cookie")
 
         page.wait_for_timeout(2000)
-
 
         # Click on "Предстоящи събития"
         logger.info("Click on div")
@@ -53,8 +54,6 @@ def scrape_url_links() -> tuple[list[str], str]:
             logger.error("Error on click on brochure")
             raise Exception("Error on click on brochure")
 
-        img_links: list[str] = []
-
         while True:
             # Extract image links on current page
             logger.info("Start to extract images")
@@ -81,17 +80,19 @@ def scrape_url_links() -> tuple[list[str], str]:
                     "button.button.button--primary-negative.button--label-uppercase.button--bold.button--icon.button--center.button--hover-background.button--navigation.button--navigation-kaufland[aria-label='Следваща страница']",
                     timeout=5000,
                 )
-            except Exception:
+            except Exception as e:
+                logger.error(str(e))
                 logger.error("Error on click on next button")
                 break
 
             page.wait_for_timeout(3000)
 
         logger.info("Collected image links:")
-       
+
         logger.info(len(img_links))
 
         browser.close()
 
     logger.info("End of scraping")
+
     return img_links, dates

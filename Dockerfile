@@ -1,5 +1,5 @@
 # Stage 1: Base image with Playwright
-FROM python:3.13.8-slim-bookworm AS playwright-base
+FROM python:3.13.9-slim-bookworm AS playwright-base
 
 RUN pip install playwright && playwright install --with-deps
 
@@ -16,6 +16,6 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --locked
 
-COPY . .
+COPY ./src .
 
 CMD ["uv", "run", "main.py"]
